@@ -13,8 +13,19 @@ public class Task01Main {
         */
     }
 
-    public static String extractSoundName(File file) throws IOException, InterruptedException {
-        // your implementation here
-        return "sound name";
+    public static String extractSoundName(File file) throws IOException {
+        ProcessBuilder pb = new ProcessBuilder(
+                "\"D:\\Apps\\ffmpeg-master-latest-win64-gpl-shared\\bin\\ffprobe.exe\"", "-v", "error", "-of", "flat", "-show_format", file.getAbsolutePath());
+        Process process = pb.start();
+
+        String output = new String(process.getInputStream().readAllBytes());
+
+        for (String line : output.split("\n")) {
+            if (line.startsWith("format.tags.title=")) {
+                String value = line.substring("format.tags.title=".length()).trim();
+                return value.substring(1,value.length() - 1);
+            }
+        }
+        return null;
     }
 }
