@@ -1,7 +1,10 @@
 package com.example.task02;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Task02Main {
@@ -9,15 +12,24 @@ public class Task02Main {
         //здесь вы можете вручную протестировать ваше решение, вызывая реализуемый метод и смотря результат
         // например вот так:
 
-        /*
         System.out.println(listFiles(Paths.get("task02/src/main/resources/")));
-        */
 
     }
 
-    public static List<Path> listFiles(Path rootDir) throws IOException, InterruptedException {
-        // your implementation here
+    public static List<Path> listFiles(Path rootDir) throws IOException {
+        List<Path> result = new ArrayList<>();
 
-        return null;
+        try (var stream = Files.newDirectoryStream(rootDir)) {
+            for (Path entry : stream) {
+                if (Files.isDirectory(entry)) {
+                    result.addAll(listFiles(entry));
+                }
+                else if (Files.isRegularFile(entry)) {
+                    result.add(entry);
+                }
+            }
+        }
+
+        return result;
     }
 }
