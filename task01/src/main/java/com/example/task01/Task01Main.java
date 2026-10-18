@@ -26,8 +26,6 @@ public class Task01Main {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("format.tags.title=")) {
-                    // Строка вида: format.tags.title="Canon trias harmonica a 8"
-                    // Извлекаем то, что внутри кавычек
                     int firstQuote = line.indexOf('"');
                     int lastQuote = line.lastIndexOf('"');
                     if (firstQuote != -1 && lastQuote > firstQuote) {
