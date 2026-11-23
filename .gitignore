@@ -33,3 +33,6 @@ out/
 
 # MCP-сервер Serena
 .serena/
+
+# ...
+export.ps1
