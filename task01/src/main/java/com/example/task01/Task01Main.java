@@ -2,6 +2,9 @@ package com.example.task01;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 public class Task01Main {
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -14,7 +17,36 @@ public class Task01Main {
     }
 
     public static String extractSoundName(File file) throws IOException, InterruptedException {
-        // your implementation here
-        return "sound name";
+        ProcessBuilder pb = new ProcessBuilder(
+                "ffprobe",
+                "-v", "error",
+                "-of", "flat",
+                "-show_format",
+                file.getAbsolutePath()
+        );
+
+        Process process = pb.start();
+
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                        process.getInputStream(),
+                        StandardCharsets.UTF_8
+                )
+        );
+
+        String line;
+        String soundName = null;
+
+        while ((line = reader.readLine()) != null) {
+            if (line.startsWith("format.tags.title=")) {
+                soundName = line.substring(line.indexOf('=') + 1)
+                        .replace("\"", "");
+            }
+        }
+
+        process.waitFor();
+        return soundName;
+
+
     }
 }
