@@ -1,8 +1,9 @@
 package com.example.task02;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Task02Main {
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -16,8 +17,18 @@ public class Task02Main {
     }
 
     public static List<Path> listFiles(Path rootDir) throws IOException, InterruptedException {
-        // your implementation here
+        List<Path> result = new ArrayList<>();
 
-        return null;
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(rootDir)) {
+            for (Path path : stream) {
+                if (Files.isDirectory(path)) {
+                    result.addAll(listFiles(path));
+                } else {
+                    result.add(path);
+                }
+            }
+        }
+
+        return result;
     }
 }
